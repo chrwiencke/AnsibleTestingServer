@@ -1,0 +1,39 @@
+---
+  - name: Nginx Setup
+    hosts: skoleserver
+    become: true
+    tasks:
+      - name: Update and Upgrade
+        apt:
+          upgrade: yes
+          update_cache: yes
+        
+      - name: Ensure NGINX is installed
+        apt: 
+          name: nginx
+          state: latest
+        
+      - name: Change Nginx Config
+        ansible.builtin.copy:
+            dest: /etc/nginx/sites-available/default
+            content: |
+              server {
+                listen 80;
+                server_name _;
+
+                root /var/www/html;
+                index index.html;
+
+                location / {
+                    try_files $uri $uri/ =404;
+                }
+              }
+            
+      - name: Verify Nginx Config
+        command: "nginx -t"
+        
+      - name: Restart Nginx Systemctl
+        command: "systemctl restart nginx"
+        
+      - name: Rename default nginx file to index.html
+        copy: remote_src=True src=/var/www/html/index.nginx-debian.html dest=/var/www/html/index.html
