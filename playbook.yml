@@ -4,12 +4,12 @@
     become: true
     tasks:
       - name: Update and Upgrade
-        apt:
+        ansible.builtin.package:
           upgrade: yes
           update_cache: yes
         
       - name: Ensure NGINX is installed
-        apt: 
+        ansible.builtin.package:
           name: nginx
           state: latest
         
@@ -22,7 +22,7 @@
           mode: '0644'           
 
       - name: Verify Nginx Config
-        command: "nginx -t"
+        shell: nginx -t
         
       - name: Create new index.html file
         ansible.builtin.copy:
@@ -35,4 +35,4 @@
           path: /var/www/html/index.nginx-debian.html
 
       - name: Restart Nginx Systemctl
-        command: "systemctl restart nginx"
+        shell: systemctl restart nginx
