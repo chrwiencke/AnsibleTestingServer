@@ -15,7 +15,7 @@
         
       - name: Change Nginx Config
         ansible.builtin.copy:
-          src: /Users/chw/Desktop/Dev/AnsibleTestingServer/nginxconfig
+          src: /Users/chw/Desktop/Dev/AnsibleTestingServer/Setup Nginx Basic/nginxconfig
           dest: /etc/nginx/sites-available/default
           owner: root
           group: root
@@ -26,7 +26,7 @@
         
       - name: Create new index.html file
         ansible.builtin.copy:
-          src: /Users/chw/Desktop/Dev/AnsibleTestingServer/index.html
+          src: /Users/chw/Desktop/Dev/AnsibleTestingServer/Setup Nginx Basic/index.html
           dest: /var/www/html/index.html
 
       - name: Delete normal nginx file
@@ -34,5 +34,7 @@
           state: absent
           path: /var/www/html/index.nginx-debian.html
 
-      - name: Restart Nginx Systemctl
-        shell: systemctl restart nginx
+      - name: Restart Nginx service
+        service:
+          name: nginx
+          state: restarted
